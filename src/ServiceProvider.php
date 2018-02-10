@@ -19,7 +19,7 @@ class ServiceProvider extends BaseServiceProvider
 
         \Validator::extend('ccd', function($attribute, $value, $parameters, $validator) {
             try {
-                $value = explode('/', $value);
+                $value = explode('-', $value);
                 return CreditCard::validDate(strlen($value[1]) == 2 ? (2000+$value[1]) : $value[1], $value[0]);
             } catch(\Exception $e) {
                 return false;
