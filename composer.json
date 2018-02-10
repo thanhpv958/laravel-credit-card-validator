@@ -22,5 +22,12 @@
             "Rap2hpoutre\\LaravelCreditCardValidator\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rap2hpoutre\\LaravelCreditCardValidator\\ServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable"
 }
