@@ -2,7 +2,7 @@
 namespace Rap2hpoutre\LaravelCreditCardValidator;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Inacho\CreditCard;
+use Rap2hpoutre\LaravelCreditCardValidator\CreditCard;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -13,19 +13,31 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
+        // card number
         \Validator::extend('ccn', function($attribute, $value, $parameters, $validator) {
             return CreditCard::validCreditCard($value)['valid'];
         });
 
+        // year/month
         \Validator::extend('ccd', function($attribute, $value, $parameters, $validator) {
-            try {
-                $value = explode('-', $value);
-                return CreditCard::validDate(strlen($value[0]) == 2 ? (2000+$value[0]) : $value[0], $value[1]);
-            } catch(\Exception $e) {
-                return false;
-            }
+            $value = explode('/', $value);
+
+            return CreditCard::validDate(strlen($value[0]) == 2 ? (2000+$value[0]) : $value[0], $value[1]);
         });
 
+        // month
+        \Validator::extend('ccdm', function($attribute, $value, $parameters, $validator) {
+            return CreditCard::validMonth($value);
+        });
+
+        // year
+        \Validator::extend('ccdy', function($attribute, $value, $parameters, $validator) {
+            $value = strlen($value) == 2 ? (2000+$value) : $value;
+
+            return CreditCard::validYear($value);
+        });
+
+        // card cvc
         \Validator::extend('cvc', function($attribute, $value, $parameters, $validator) {
             return ctype_digit($value) && (strlen($value) == 3 || strlen($value) == 4);
         });
